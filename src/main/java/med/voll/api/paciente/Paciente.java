@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import med.voll.api.direccion.Direccion;
+import med.voll.api.medico.DatosActualizarMedico;
 
 @Getter
 @EqualsAndHashCode(of = "id")
@@ -21,17 +22,35 @@ public class Paciente {
 
     private String nombre;
     private String email;
-    private String documentoIdentidad;
+    private String documento;
     private String telefono;
+    private Boolean activo;
 
     @Embedded
     private Direccion direccion;
 
     public Paciente(DatosRegistroPaciente datos) {
+        this.activo = true;
         this.nombre = datos.nombre();
         this.email = datos.email();
         this.telefono = datos.telefono();
-        this.documentoIdentidad = datos.documentoIdentidad();
+        this.documento = datos.documento();
         this.direccion = new Direccion(datos.direccion());
+    }
+
+    public void actualizarInformacion(DatosActualizarPaciente datosActualizarPaciente){
+        if (datosActualizarPaciente.nombre() !=null){
+            this.nombre = datosActualizarPaciente.nombre();
+        }
+        if (datosActualizarPaciente.telefono() !=null){
+            this.telefono = datosActualizarPaciente.telefono();
+        }
+        if (datosActualizarPaciente.direccion() !=null){
+            this.direccion = new Direccion(datosActualizarPaciente.direccion());
+        }
+    }
+
+    public void desactivarPaciente(){
+        this.activo = false;
     }
 }

@@ -6,11 +6,11 @@ public record DatosDireccion(
         @NotBlank
         String calle,
         @NotBlank
+        String numero,
+        @NotBlank
         String distrito,
         @NotBlank
         String ciudad,
-        @NotBlank
-        String numero,
         @NotBlank
         String complemento
 ) {

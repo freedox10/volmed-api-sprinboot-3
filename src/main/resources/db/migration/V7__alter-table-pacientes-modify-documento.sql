@@ -1,0 +1,1 @@
+alter table pacientes change documentoIdentidad documento varchar(14) not null unique;
