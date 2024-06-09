@@ -33,12 +33,12 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "clave";
+        return clave;
     }
 
     @Override
     public String getUsername() {
-        return "login";
+        return login;
     }
 
     @Override
