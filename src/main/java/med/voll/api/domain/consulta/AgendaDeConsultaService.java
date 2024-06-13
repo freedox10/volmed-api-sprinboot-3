@@ -1,9 +1,9 @@
 package med.voll.api.domain.consulta;
 
+import med.voll.api.domain.consulta.validaciones.ValidadorCancelamientoDeConsulta;
 import med.voll.api.domain.consulta.validaciones.ValidadorDeConsulta;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.medico.MedicoRepository;
-import med.voll.api.domain.paciente.Paciente;
 import med.voll.api.domain.paciente.PacienteRepository;
 import med.voll.api.infra.errores.ValidacionDeIntegridad;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,10 @@ public class AgendaDeConsultaService {
     private ConsultaRepository consultaRepository;
     @Autowired
     List<ValidadorDeConsulta> validadores;
+    @Autowired
+    List<ValidadorCancelamientoDeConsulta> validadoresCancelamiento;
 
-    public void agendar(DatosAgendarConsulta datos){
+    public DatosDetalleConsulta agendar(DatosAgendarConsulta datos){
 
         if(pacienteRepository.findById(datos.idPaciente()).isEmpty()){
             throw new ValidacionDeIntegridad("Este id para el paciente no fue encontrado");
@@ -40,10 +42,25 @@ public class AgendaDeConsultaService {
 
         var medicoSeleccionado = seleccionarMedico(datos);
 
-        var consulta = new Consulta(null, medicoSeleccionado, paciente, datos.fecha());
+        if (medicoSeleccionado == null){
+            throw new ValidacionDeIntegridad("no existen medicos disponibles para este horario y especialidad");
+        }
+
+        var consulta = new Consulta(medicoSeleccionado, paciente, datos.fecha());
 
 
         consultaRepository.save(consulta);
+
+        return new DatosDetalleConsulta(consulta);
+    }
+
+    public void cancelar(DatosCancelamientoConsulta datos){
+        if (!consultaRepository.existsById(datos.idConsulta())){
+            throw new ValidacionDeIntegridad("Id de la consulta informado no existe!");
+        }
+        validadoresCancelamiento.forEach(v->v.validar(datos));
+        var consulta = consultaRepository.getReferenceById(datos.idConsulta());
+//        consulta.cancelar(datos.motivo());
     }
 
     private Medico seleccionarMedico(DatosAgendarConsulta datos){

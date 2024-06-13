@@ -32,16 +32,3 @@ public interface MedicoRepository extends JpaRepository<Medico, Long> {
     Boolean findActivoById(Long idMedico);
 }
 
-
-//("""
-//            select m from Medico m
-//            where m.activo= 1 and
-//            m.especialidad=:especialidad and
-//            m.id not in(
-//            select c.medico.id from Consulta c
-//            where
-//            c.data=:fecha
-//            )
-//            order by rand()
-//            limit 1
-//            """)

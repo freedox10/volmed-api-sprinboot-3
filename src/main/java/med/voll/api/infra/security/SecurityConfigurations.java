@@ -35,6 +35,7 @@ public class SecurityConfigurations {
                     authorize.requestMatchers(HttpMethod.POST,"/login").permitAll();
                     authorize.requestMatchers(HttpMethod.DELETE, "/medicos").hasRole("ADMIN");
                     authorize.requestMatchers(HttpMethod.DELETE, "/pacientes").hasRole("ADMIN");
+                    authorize.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

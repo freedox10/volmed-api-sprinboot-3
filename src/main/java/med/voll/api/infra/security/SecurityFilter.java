@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.yaml.snakeyaml.tokens.Token;
 
 import java.io.IOException;
 
@@ -29,11 +28,11 @@ public class SecurityFilter extends OncePerRequestFilter {
         var authHeader = request.getHeader("Authorization");//.replace("Bearer ", "");
         System.out.println("authHeader: "+authHeader);
         if (authHeader != null){
-            System.out.println("Validamos que token no es nulo");
+            //System.out.println("Validamos que token no es nulo");
             var token = authHeader.replace("Bearer ", "");
-            System.out.println("token en filter: "+ token);
+            //System.out.println("token en filter: "+ token);
             var nombreUsuario = tokenService.getSubjet(token);
-            System.out.println("tokenService.getSubjet(token): "+tokenService.getSubjet(token));//Este usuario tiene sesión?
+            //System.out.println("tokenService.getSubjet(token): "+tokenService.getSubjet(token));//Este usuario tiene sesión?
             if (nombreUsuario != null){
                 // token válido
                 var usuario = usuarioRepository.findByLogin(nombreUsuario);
