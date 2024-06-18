@@ -48,19 +48,26 @@ public class AgendaDeConsultaService {
 
         var consulta = new Consulta(medicoSeleccionado, paciente, datos.fecha());
 
-
         consultaRepository.save(consulta);
 
         return new DatosDetalleConsulta(consulta);
     }
 
+    //public void cancelar(DatosCancelamientoConsulta datos){
     public void cancelar(DatosCancelamientoConsulta datos){
-        if (!consultaRepository.existsById(datos.idConsulta())){
+        if (!consultaRepository.existsById(datos.id())){
             throw new ValidacionDeIntegridad("Id de la consulta informado no existe!");
         }
+
+        //System.out.println("antes validar");
         validadoresCancelamiento.forEach(v->v.validar(datos));
-        var consulta = consultaRepository.getReferenceById(datos.idConsulta());
-//        consulta.cancelar(datos.motivo());
+        //System.out.println("despues validar");
+
+        var consulta = consultaRepository.getReferenceById(datos.id());
+        //System.out.println("consulta antes cancelar: "+consulta);
+        consulta.cancelar(datos.motivo());
+        //System.out.println("consulta despues cancelar: "+consulta);
+        consultaRepository.save(consulta);
     }
 
     private Medico seleccionarMedico(DatosAgendarConsulta datos){

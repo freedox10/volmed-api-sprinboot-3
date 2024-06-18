@@ -4,16 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import med.voll.api.domain.consulta.AgendaDeConsultaService;
-import med.voll.api.domain.consulta.DatosAgendarConsulta;
-import med.voll.api.domain.consulta.DatosDetalleConsulta;
+import med.voll.api.domain.consulta.*;
 import med.voll.api.infra.errores.ValidacionDeIntegridad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/consultas")
@@ -23,6 +18,9 @@ public class ConsultaController {
 
     @Autowired
     AgendaDeConsultaService service;
+
+    @Autowired
+    ConsultaRepository consultaRepository;
 
     @PostMapping
     @Transactional
@@ -38,4 +36,18 @@ public class ConsultaController {
 
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity cancelarConsulta(@PathVariable Long id, @RequestBody @Valid DatosCancelamientoConsulta datos) {
+        //Consulta consulta = consultaRepository.getReferenceById(id);
+        //Consulta consulta = new Consulta();
+        DatosCancelamientoConsulta cancelamientoConsulta = new DatosCancelamientoConsulta(
+                id, datos.idPaciente(), datos.idMedico(), datos.fecha(), datos.motivo());
+        System.out.println("cancelamientoConsulta: "+cancelamientoConsulta);
+        service.cancelar(cancelamientoConsulta);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
