@@ -1,5 +1,6 @@
 package med.voll.api.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/consultas")
 @SecurityRequirement(name = "bearer-key")
+//@SuppressWarnings("all")
 public class ConsultaController {
 
     @Autowired
@@ -24,6 +26,11 @@ public class ConsultaController {
 
     @PostMapping
     @Transactional
+    //El @Operación la anotación se usa para describir una sola operación. Una operación es una combinación única de una ruta y un método HTTP.
+    @Operation(
+            summary = "registra una consulta",
+            description = "debe existir paciente y medico o especialidad",
+            tags = { "consulta", "post" })
     public ResponseEntity agendar(@RequestBody @Valid DatosAgendarConsulta datos) throws ValidacionDeIntegridad {
         //System.out.println("datos: "+datos);
 

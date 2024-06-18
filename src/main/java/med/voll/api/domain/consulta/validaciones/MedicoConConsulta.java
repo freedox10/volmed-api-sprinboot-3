@@ -14,7 +14,7 @@ public class MedicoConConsulta implements ValidadorDeConsulta {
 
     public void validar(DatosAgendarConsulta datos){
         if(datos.idMedico() == null){
-            return;
+            return; // vuelve  xq medico puede estar vacio y luego asignarlo aleatoriamente por especialidad
         }
 
         var medicoConsulta = consultaRepository.existsByMedicoIdAndData(datos.idMedico(),datos.fecha());
